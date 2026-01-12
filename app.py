@@ -25,14 +25,11 @@ import io
 # Heavy imports for audio analysis (only loaded when needed)
 @st.cache_resource
 def load_audio_libs():
-    """Load audio libs safely"""
+    """PESQ optional - fallback to SNR only for Streamlit Cloud"""
     import scipy.io.wavfile as wav
     import scipy.signal as signal
-    try:
-        from pypesq import pesq
-    except ImportError:
-        st.warning("pypesq not available - PESQ metrics disabled")
-        pesq = None
+    pesq = None  # Skip problematic package
+    st.info("PESQ disabled for deployment stability. Using SNR metrics.")
     return wav, signal, pesq
 
 
