@@ -25,11 +25,16 @@ import io
 # Heavy imports for audio analysis (only loaded when needed)
 @st.cache_resource
 def load_audio_libs():
-    """Lazy load heavy audio/ML libraries to save memory on startup"""
+    """Load audio libs safely"""
     import scipy.io.wavfile as wav
     import scipy.signal as signal
-    from pypesq import pesq  # PESQ metric
+    try:
+        from pypesq import pesq
+    except ImportError:
+        st.warning("pypesq not available - PESQ metrics disabled")
+        pesq = None
     return wav, signal, pesq
+
 
 # Create results directory if not exists
 @st.cache_data
